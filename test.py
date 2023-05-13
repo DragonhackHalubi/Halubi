@@ -15,7 +15,7 @@ city_token = os.getenv("CITY_API_TOKEN")
 #chatgpt_call(prompt, token)
 
 coords = get_city_coordinates("Ljubljana", city_token)
-
+print(coords)
 """plan = {
     "19.2.-20.2.": "London",
     "21.2.": "Rome"
