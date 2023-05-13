@@ -21,5 +21,4 @@ def get_city_coordinates(city_name: str, token: str):
 
     coordinates = response.json()["data"][0]["geoCode"]
 
-
     return [coordinates["latitude"], coordinates["longitude"]]
