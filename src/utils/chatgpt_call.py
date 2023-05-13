@@ -1,7 +1,10 @@
 import requests
 from typing import Dict, List
 
-def _chatgpt_call(prompt: str, token: str, model: str = "gpt-3.5-turbo"):
+def _chatgpt_call(prompt: str, token: str, model: str = "gpt-3.5-turbo") -> str:
+    """The function takes prompt and token for the chatgpt and returns the response of the query as
+    a string."""
+
     response = requests.post(
         "https://openai-api.meetings.bio/api/openai/chat/completions",
         headers={"Authorization": f"Bearer {token}"},
@@ -10,15 +13,18 @@ def _chatgpt_call(prompt: str, token: str, model: str = "gpt-3.5-turbo"):
             "messages": [{"role": "user", "content": prompt}],
         },
     )
-    breakpoint()
     if response.ok:
         content = response.json()["choices"][0]["message"]["content"]
+        
         print(len(content.split()))
-        print(content)
+        
         return content
 
 def generate_trip(plan: Dict[str, str], preferences: List[str], token: str,
-                  model: str = "gpt-3.5-turbo"):
+                  model: str = "gpt-3.5-turbo") -> Dict[str, List[str]]:
+    """Returns the schedule by days for the entire trip with 3 reccomendations for each day. The
+    return format is a dict or string (if format is incorrect)"""
+    
     prompt = f"""
     Plan a trip with the information provided the text delimited by triple backticks. The 
     information will be in json structure where the keys are gonna be dates or range of dates 
@@ -35,4 +41,11 @@ def generate_trip(plan: Dict[str, str], preferences: List[str], token: str,
 
     print(len(prompt.split()))
 
-    return _chatgpt_call(prompt, token, model)
+    resp = _chatgpt_call(prompt, token, model)
+
+    try:
+        r_dict = json.loads(resp.replace("`", ""))
+        return r_dict
+    except:
+        print("Incorrect format of api response", flush=True)
+        return resp
