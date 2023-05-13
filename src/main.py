@@ -143,6 +143,14 @@ def get_trip(trip_id):
                     'user_id': trip.user_id,
                     'trip_json': trip.trip_json}), 200
 
+@app.route('/trips/user/<int:user_id>', methods=['GET'])
+def get_trips_by_user(user_id):
+    trips = Trips.query.filter_by(user_id=user_id).all()
+    trips_list = []
+    for trip in trips:
+        trips_list.append(trip.as_dict())
+    return jsonify(trips=trips_list)
+
 @app.route('/trips/suggestion', methods=['GET'])
 def trip_suggestion():
     data = request.get_json()
