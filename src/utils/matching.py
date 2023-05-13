@@ -13,13 +13,13 @@ def distance(lat1, long1, lat2, long2):
     return distance
 
 def calculate_user_compatibility(user1, user2):
-    similarity = 0
+    similarity = []
     for day in user1:
         if day in user2:
             dist = distance(user1[day][0], user1[day][1], user2[day][0], user2[day][1])
-            print(dist)
+            # print(dist)
             if dist < 30:
-                similarity += 1
+                similarity.append(day)
     return similarity
 
 u1 = {
@@ -38,4 +38,4 @@ u2 = {
     5: [45.5524934,13.7460746], #lj-kp
 }
 
-print(calculate_user_compatibility(u1,u2))
+# print(calculate_user_compatibility(u1,u2))
