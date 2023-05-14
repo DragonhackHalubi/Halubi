@@ -76,6 +76,15 @@ def create_users():
                     'password': new_user.password,
                     'username': new_user.username}), 201
 
+@app.route("/users/<int:user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user:
+        return {"message": "User not found"}, 404
+    db.session.delete(user)
+    db.session.commit()
+    return {"message": "User deleted successfully"}, 200
+
 @app.route('/interests')
 def get_interests():
     interests = Interests.query.all()
@@ -143,6 +152,15 @@ def get_trip(trip_id):
                     'user_id': trip.user_id,
                     'trip_json': trip.trip_json}), 200
 
+@app.route("/trips/<int:trip_id>", methods=["DELETE"])
+def delete_trip(trip_id):
+    trip = Trips.query.filter_by(trip_id=trip_id).first()
+    if not trip:
+        return {"message": "Trip not found"}, 404
+    db.session.delete(trip)
+    db.session.commit()
+    return {"message": "Trip deleted successfully"}, 200
+
 @app.route('/trips/user/<int:user_id>', methods=['GET'])
 def get_trips_by_user(user_id):
     trips = Trips.query.filter_by(user_id=user_id).all()
@@ -160,7 +178,6 @@ def trip_suggestion():
 
     interests = Interests.query.filter_by(user_id=user_id).all()
     list_interests = [interest.name for interest in interests]
-
     trip = generate_trip(plan, list_interests, os.getenv("CHATGPT_KEY"))
 
     return trip, 200
@@ -176,7 +193,7 @@ def delete_all_trips():
 
 @app.route('/buddies', methods=['GET'])
 def get_buddies():
-    plan = request.get_json()
+    plan = request.get_json()["plan"]
 
     # Get my trip
     my_plan = generate_plan(plan)

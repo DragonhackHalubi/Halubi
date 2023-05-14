@@ -14,21 +14,26 @@ city_token = os.getenv("CITY_API_TOKEN")
 
 #chatgpt_call(prompt, token)
 
-coords = get_city_coordinates("Ljubljana", city_token)
-print(coords)
-"""plan = {
-    "19.2.-20.2.": "London",
-    "21.2.": "Rome"
-}
+# coords = get_city_coordinates("Ljubljana", city_token)
+# print(coords)
+plan = [
+    {
+        "date": "19.2.",
+        "location": "London"
+    },
+    {
+        "date": "21.2.",
+        "location": "Rome"
+    }
+]
 
 preferences = ["museums", "theater", "sport", "nature"]
 
 resp = generate_trip(plan, preferences, token)
-breakpoint()
 
 try:
     r_dict = json.loads(resp.replace("`", ""))
     print(r_dict)
 except:
-    pass"""
+    pass
 
