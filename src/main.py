@@ -43,7 +43,7 @@ class Trips(db.Model):
     trip_id = db.Column(db.Integer, primary_key=True)
     trip_json = db.Column(JSONB)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    interests = db.relationship("Users", backref=db.backref("trips", uselist=True))
+    trips = db.relationship("Users", backref=db.backref("trips", uselist=True))
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -180,7 +180,14 @@ def trip_suggestion():
     list_interests = [interest.name for interest in interests]
     trip = generate_trip(plan, list_interests, os.getenv("CHATGPT_KEY"))
 
-    return trip, 200
+    new_trip = Trips(trip_json=trip["plan"], user_id=user_id)
+
+    db.session.add(new_trip)
+    db.session.commit()
+
+    return jsonify({'trip_id': new_trip.trip_id,
+                    'user_id': new_trip.user_id,
+                    'trip_json': new_trip.trip_json}), 200
 
 @app.route('/trips', methods=['DELETE'])
 def delete_all_trips():
@@ -220,7 +227,7 @@ def get_buddies():
 
     buddies = sorted(list(buddies.items()), key= lambda x: -len(x[1]))
     
-    return {"buddies": buddies}, 200
+    return {"buddies": buddies}, 201
 
 
 
