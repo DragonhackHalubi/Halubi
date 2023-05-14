@@ -211,6 +211,7 @@ def get_buddies():
         # Get trip for a potential buddy
         candidate_plan = generate_plan(candidate_trip.trip_json)
         # Get the list of dates in which we match
+
         matches = calculate_user_compatibility(my_plan, candidate_plan)
 
         # If user has nothing in common skip
